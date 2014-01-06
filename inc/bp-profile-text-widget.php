@@ -92,7 +92,7 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
 
 			$url = xprofile_get_field_data( 'Custom Text Box' );
 
-			if ( $instance['hide_empty'] == 0 && !empty( $url ) ) {
+			if ( !empty( $url ) || $instance['hide_empty'] == 0 ) {
 
 				extract( $args );
 

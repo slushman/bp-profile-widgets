@@ -3,8 +3,8 @@ Contributors: slushman
 Donate link: http://slushman.com/
 Tags: buddypress, widget, music, player, Bandcamp, Tunecore, Reverbnation, SoundCloud, Noisetrade, embed, profile, video, YouTube, Vimeo, Veoh, uStream, Blip.tv, Blip, DailyMotion, gallery, photo, photos, slideshow, Flickr, Picasa, Photobucket, Facebook, dotPhoto, Fotki, text, HTML, Smugmug, funnyordie.com, Revision3, Hulu, Viddler, Qik, Mixcloud, oEmbed
 Requires at least: 2.9.1, Buddypress plugin
-Tested up to: 3.6
-Stable tag: 0.4.2
+Tested up to: 3.8
+Stable tag: 0.5
 License: GPLv2
 
 BP Profile Widgets allows BuddyPress users to embed a music player, video player, photo gallery, and/or a custom text widget on the sidebar of the user's profile page using custom profile fields from their profile form. This plugin requires that BuddyPress be installed and activated.
@@ -152,6 +152,17 @@ This has changed as of version 0.2. Now, the widgets will only appear on the pro
 
 == Changelog ==
 
+= 0.5 =
+* Added files and formatting for I10n.
+* Fixed "hide if empty" option on all widgets.
+* Music Widget: removed all functions related to fetching data from DOM. Doesn't work on  every server and causes issues with some server configs.
+* Music Widget: removed find_service_from_url(), it was replaced in the last version and there's no reason to keep it.
+* Music Widget: Simplified find_service() to make it DRY.
+* Music Widget: Simplified find_id() to go straight to finding the ID on page.
+* Music Widget: resolved bug that caused some players to display as "page cannot be found"
+* Music Widget: added albumortrack() to figure out if the URL is for an album, track, or is invalid
+* 
+
 = 0.4.2 =
 * BUG FIX: Changed find_service_on_page() to actually work.
 
@@ -187,6 +198,9 @@ This has changed as of version 0.2. Now, the widgets will only appear on the pro
 * Plugin created.
 
 == Upgrade Notice ==
+
+= 0.5 =
+
 
 = 0.4.2 =
 * BUG FIX: Changed find_service_on_page() to work with server configs.

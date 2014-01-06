@@ -4,14 +4,14 @@
 Plugin Name: BP Profile Widgets
 Plugin URI: http://slushman.com/plugins/bp-profile-widgets
 Description: BP Profile Widgets allows BuddyPress users to embed a music player, a video player, a photo gallery, and/or a custom text widget on the sidebar of the user's profile page using custom profile fields from their profile form. This plugin requires that BuddyPress be installed and the theme have at least one sidebar.
-Version: 0.4.2
+Version: 0.5
 Author: Slushman
 Author URI: http://slushman.com
 License: GPLv2
 
 **************************************************************************
 
-  Copyright (C) 2013 Slushman
+  Copyright (C) 2014 Slushman
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General License as published by
@@ -102,6 +102,10 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 
             // Add oEmbed support for Mixcloud
             add_action( 'plugins_loaded', array( $this, 'enable_oembed_mixcloud' ), 7 );
+
+            // I10n
+            load_plugin_textdomain( 'yourplugin', false, basename( dirname( __FILE__ ) ) . '/languages' );
+
 
 			$this->constants 	= $this->constants + array( 'file' => __FILE__ );
 			$this->options 		= (array) get_option( $this->constants['name'] );

@@ -212,7 +212,7 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 
 			$url = xprofile_get_field_data( 'Photo Gallery URL' );
 
-			if ( $instance['hide_empty'] == 0 && !empty( $url ) ) {
+			if ( !empty( $url ) || $instance['hide_empty'] == 0 ) {
 
 				extract( $args );
 

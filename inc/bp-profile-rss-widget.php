@@ -24,7 +24,6 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
 
 		// Form fields
 		// required: name, underscored, type, & value. optional: desc, sels, size
-		$this->fields[] = array( 'name' => 'Feed Title (optional)', 'underscored' => 'title', 'type' => 'text', 'value' => 'RSS Feed' );
 		$this->fields[] = array( 'name' => 'How many items?', 'underscored' => 'items', 'type' => 'select', 'value' => 10, 'sels' => $item_selects );
 		$this->fields[] = array( 'name' => 'Display item content?', 'underscored' => 'show_summary', 'type' => 'checkbox', 'value' => 0 );
 		$this->fields[] = array( 'name' => 'Display item author if available?', 'underscored' => 'show_author', 'type' => 'checkbox', 'value' => 0 );
@@ -223,7 +222,7 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
 
   			$url = xprofile_get_field_data( 'RSS Feed URL' );
 
-			if ( $instance['hide_empty'] == 0 && !empty( $url ) ) {
+			if ( !empty( $url ) || $instance['hide_empty'] == 0 ) {
 
 				extract( $args, EXTR_SKIP );
 
