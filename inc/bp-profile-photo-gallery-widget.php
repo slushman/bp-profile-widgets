@@ -153,7 +153,7 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 					<param name="swliveconnect" value="true"/>
 					<param name="flashvars" value="playerStyle=embeddedWidget&SID=<?php echo $albumID; ?>&password="/>
 					<param name="movie" value="http://www.dotphoto.com/FlashTool/player.swf"/>
-					<embed src="http://www.dotphoto.com/FlashTool/player.swf" quality="high" allowFullScreen="true" allowNetworking="all" allowScriptAccess="always" bgcolor="#ffffff" width="<?php echo $width; ?>" height="<?php echo $width; ?>" flashvars="playerStyle=embeddedWidget&SID=<?php echo $albumID; ?>&password=" name="show_<?php echo $albumID; ?>" align="middle" wmode="transparent" type="application/x-shockwave-flash" pluginspace="http://www.macromedia.com/go/getflashplayer"></embed>
+					<embedÂ src="http://www.dotphoto.com/FlashTool/player.swf"Â quality="high"Â allowFullScreen="true"Â allowNetworking="all"Â allowScriptAccess="always"Â bgcolor="#ffffff"Â width="<?php echo $width; ?>"Â height="<?php echo $width; ?>"Â flashvars="playerStyle=embeddedWidget&SID=<?php echo $albumID; ?>&password="Â name="show_<?php echo $albumID; ?>"Â align="middle"Â wmode="transparent"Â type="application/x-shockwave-flash"Â pluginspace="http://www.macromedia.com/go/getflashplayer"></embed>
 				</object><?php
 			
 			} elseif ( !$oembed && $service == 'imgur' ) {
@@ -164,6 +164,9 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 		 		$albumID 	= end( explode( '/', $url['path'] ) ); ?>
 
 				<iframe class="imgur-album" width="<?php echo $width; ?>" height="<?php echo $height; ?>" frameborder="0" src="http://imgur.com/a/<?php echo $albumID; ?>/embed"></iframe><?php
+
+
+				<object width="450" height="298"><param name="movie" value="http://backend.deviantart.com/embed/view.swf?1"><param name="flashvars" value="id=425793394&width=1337"><param name="allowScriptAccess" value="always"><embed src="http://backend.deviantart.com/embed/view.swf?1" type="application/x-shockwave-flash" width="450" height="298" flashvars="id=425793394&width=1337" allowscriptaccess="always"></embed></object>
 
 			} else {
 
