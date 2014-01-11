@@ -8,21 +8,31 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 	function __construct() {
 	
 		$name 						= 'BP Profile Photo Gallery';
+		$this->i18n					= 'bp-profile-widgets';
 		$widget_opts['description'] = __( 'Add a photo gallery to your BuddyPress profile page.', 'slushman-bp-profile-photo-gallery' );
 	
 		parent::__construct( false, $name, $widget_opts );
 
-		// Future i10n support
-		// load_plugin_textdomain( PLUGIN_LOCALE, false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
-
 		// Form fields
 		// required: name, underscored, type, & value. optional: desc, sels, size
-		$this->fields[] = array( 'name' => 'Title', 'underscored' => 'title', 'type' => 'text', 'value' => 'Photo Gallery' );
-		$this->fields[] = array( 'name' => 'Width', 'underscored' => 'width', 'type' => 'text', 'value' => '' );
-		$this->fields[] = array( 'name' => 'Height', 'underscored' => 'height', 'type' => 'text', 'value' => '' );
-		$this->fields[] = array( 'name' => 'Empty Message', 'underscored' => 'emptymsg', 'type' => 'text', 'value' => 'This user has not activated their photo gallery.' );
-		$this->fields[] = array( 'name' => 'Hide widget if empty', 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
-			
+		$this->fields[] = array( 'name' => __( 'Title', $this->i18n ), 'underscored' => 'title', 'type' => 'text', 'value' => __( 'Photo Gallery', $this->i18n ) );
+		$this->fields[] = array( 'name' => __( 'Width', $this->i18n ), 'underscored' => 'width', 'type' => 'text', 'value' => '' );
+		$this->fields[] = array( 'name' => __( 'Height', $this->i18n ), 'underscored' => 'height', 'type' => 'text', 'value' => '' );
+		$this->fields[] = array( 'name' => __( 'Empty Message', $this->i18n ), 'underscored' => 'emptymsg', 'type' => 'text', 'value' => __( 'This user has not activated their photo gallery.', $this->i18n ) );
+		$this->fields[] = array( 'name' => __( 'Hide widget if empty', $this->i18n ), 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
+
+		$this->options 	= (array) get_option( 'slushman_bppw_settings' );
+		$quantity 		= $this->options['BP_profile_photo_gallery_widget'];
+
+		// Create $selects for how many items select menu
+		for ( $i = 1; $i <= $quantity; $i++ ) {
+
+			$instance_selects[] = array( 'label' => $i, 'value' => $i );
+
+		} // End of for loop
+
+		$this->fields[] = array( 'name' => 'If you use multiple widgets: which one is this?', 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
+
 	} // End of __construct()
 
 /**
@@ -36,14 +46,16 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 
 		global $slushman_bp_profile_widgets, $slushkit;
 
-		$galleryURL 	= xprofile_get_field_data( 'Photo Gallery URL' );
-		$description 	= xprofile_get_field_data( 'Photo Gallery Role' );
-		$width 			= ( empty( $instance['width'] ) ? '' : $instance['width'] );
-		$height 		= ( empty( $instance['height'] ) ? '' : $instance['height'] );
+		$urlfield 	= __( 'Photo Gallery URL', $this->i18n );
+		$rolefield	= __( 'Photo Gallery Role', $this->i18n );
+		$url 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $urlfield );
+		$desc 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $rolefield );
+		$width 		= ( empty( $instance['width'] ) ? '' : $instance['width'] );
+		$height 	= ( empty( $instance['height'] ) ? '' : $instance['height'] );
 		
-		if ( !empty( $galleryURL ) ) {
+		if ( !empty( $url ) ) {
 			
-			list( $prefix,, $site ) = explode( '/', $galleryURL );
+			list( $prefix,, $site ) = explode( '/', $url );
 			$parts 					= explode( '.', $site );
 
 			$checks = array( 'flickr', 'picasaweb', 'photobucket', 'fotki', 'dotphoto', 'imgur', 'smugmug' );
@@ -61,19 +73,19 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 
 		} // End of empty check
 
-		if ( empty( $galleryURL ) || empty( $service ) ) {
+		if ( empty( $url ) || empty( $service ) ) {
 
 			echo '<p>' . ( !empty( $instance['emptymsg'] ) ? $instance['emptymsg'] : '' ) . '</p>';
 		
 		} else {
 
-			$oembed = $slushman_bp_profile_widgets->oembed_transient( $galleryURL, $width, $height ); 
+			$oembed = $slushman_bp_profile_widgets->oembed_transient( $url, $width, $height ); 
 
 			if ( !$oembed && $service == 'flickr' ) { 
 			
 				// Input example: http://www.flickr.com/photos/christopherjoel/sets/72157617395267762
 
-				$url 										= parse_url( $galleryURL );
+				$url 										= parse_url( $url );
 		 		list( $site, $a, $username, $b, $setID ) 	= explode( '/', $url['path'] ); ?>
 			
 				<object width="<?php echo $width; ?>" height="<?php echo $height; ?>">
@@ -87,7 +99,7 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 			
 				// Input example: https://picasaweb.google.com/114838808449834204603/Fender72ThinlineRI?authuser=0&feat=directlink
 
-				$url 						= parse_url( $galleryURL );
+				$url 						= parse_url( $url );
 		 		list( $site, $albumID, $a ) = explode( '/', $url['path'] ); ?>
 
 				<embed type="application/x-shockwave-flash" src="https://picasaweb.google.com/s/c/bin/slideshow.swf" width="288" height="192" flashvars="host=picasaweb.google.com&hl=en_US&feat=flashalbum&RGB=0x000000&feed=https%3A%2F%2Fpicasaweb.google.com%2Fdata%2Ffeed%2Fapi%2Fuser%2F<?php echo $albumID; ?>%3Falt%3Drss%26kind%3Dphoto%26access%3Dpublic%26psc%3DF%26q%26uname%3D<?php echo $albumID; ?>" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed><?php
@@ -96,7 +108,7 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 			
 				// Input example: http://s262.photobucket.com/user/mandy_surfergirl91/library/CARS
 
-				$rss_args['url'] 	= $galleryURL;
+				$rss_args['url'] 	= $url;
 				$rss_args['start'] 	= 'rssFeed=http%3A%2F%2Ffeed';
 				$rss_args['end'] 	= '%2Ffeed.rss\"';
 				$rssfeed			= $slushkit->find_on_page( $rss_args ); 
@@ -110,12 +122,12 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 				
 				// Input example: http://public.fotki.com/sandylferguson/eagle-scout-project/
 				
-				$path 					= parse_url( $galleryURL, PHP_URL_PATH );			
+				$path 					= parse_url( $url, PHP_URL_PATH );			
 				list( $a, $user, $b ) 	= explode( '/', $path );
 				
 				$id_args['start'] 	= 'href="http://feeds.fotki.com/' . $user . '/album_';
 				$id_args['end'] 	= '.rss?p=1">';
-				$id_args['url'] 	= $galleryURL;
+				$id_args['url'] 	= $url;
 				$albumID 			= $slushkit->find_on_page( $id_args ); ?>
 			
 				<object type="application/x-shockwave-flash" data="http://images.fotki.com/flash/FlipBook-1.0.swf" width="<?php echo $width; ?>" height="<?php echo $height; ?>" style="display:block">
@@ -129,7 +141,7 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 				
 				// Input example: http://www.dotphoto.com/go.asp?l=hubble&SID=245780
 				
-		 		$albumID = end( explode( '=', $galleryURL ) ); ?>
+		 		$albumID = end( explode( '=', $url ) ); ?>
 			
 				<object width="<?php echo $width; ?>" height="<?php echo $width; ?>" align="middle" id="show_<?php echo $albumID; ?>" data="http://www.dotphoto.com/FlashTool/player.swf" allowFullScreen="true" allownetworking="all" allowscriptaccess="always" type="application/x-shockwave-flash" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" >
 					<param name="allowScriptAccess" value="always"/>
@@ -148,7 +160,7 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 
 				// Input example: http://imgur.com/a/eG4dY?gallery 
 
-				$url 		= parse_url( $galleryURL );
+				$url 		= parse_url( $url );
 		 		$albumID 	= end( explode( '/', $url['path'] ) ); ?>
 
 				<iframe class="imgur-album" width="<?php echo $width; ?>" height="<?php echo $height; ?>" frameborder="0" src="http://imgur.com/a/<?php echo $albumID; ?>/embed"></iframe><?php
@@ -164,7 +176,7 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 
 		} // End of empty checks
 		
-		echo '<p>' . ( isset( $description ) && !empty( $description ) ? $description : '' ) . '</p>';
+		echo '<p>' . ( isset( $desc ) && !empty( $desc ) ? $desc : '' ) . '</p>';
 
 	} // End of widget_output()		
 

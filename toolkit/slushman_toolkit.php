@@ -173,8 +173,8 @@ if ( !class_exists( 'Slushman_Toolkit' ) ) {
 		function add_menu() {
 		
 			add_options_page( 
-				__( 'Slushman Toolkit Demo' ), 
-				__( 'Slushman Toolkit Demo' ), 
+				'Slushman Toolkit Demo', 
+				'Slushman Toolkit Demo', 
 				'manage_options', 
 				'slushman-toolkit', 
 				array( $this, 'demo_page' ) 

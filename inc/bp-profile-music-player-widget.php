@@ -8,20 +8,30 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
  	function __construct() {
  	
  		$name 					= 'BP Profile Music Player';
- 		$opts['description'] 	= __( 'Add a music player to your BuddyPress profile page.', 'slushman-bp-profile-music-player' );
+ 		$this->i18n 			= 'bp-profile-widgets';
+ 		$opts['description'] 	= __( 'Add a music player to your BuddyPress profile page.', 'slushman-bp-profile-music-player', $this->i18n );
  		
  		parent::__construct( false, $name, $opts );
  		
-		// Future i10n support
-		// load_plugin_textdomain( PLUGIN_LOCALE, false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
-		
 		// Form fields
 		// required: name, underscored, type, & value. optional: desc, sels, size
-		$this->fields[] = array( 'name' => 'Title', 'underscored' => 'title', 'type' => 'text', 'value' => 'Music Player' );
-		$this->fields[] = array( 'name' => 'Width', 'underscored' => 'width', 'type' => 'text', 'value' => '200px' );
-		$this->fields[] = array( 'name' => 'Height', 'underscored' => 'height', 'type' => 'text', 'value' => '320px' );
-		$this->fields[] = array( 'name' => 'Empty Message', 'underscored' => 'emptymsg', 'type' => 'text', 'value' => 'This user has not activated their music player.' );
-		$this->fields[] = array( 'name' => 'Hide widget if empty', 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
+		$this->fields[] = array( 'name' => __( 'Title', $this->i18n ), 'underscored' => 'title', 'type' => 'text', 'value' => __( 'Music Player', $this->i18n ) );
+		$this->fields[] = array( 'name' => __( 'Width', $this->i18n ), 'underscored' => 'width', 'type' => 'text', 'value' => '200px' );
+		$this->fields[] = array( 'name' => __( 'Height', $this->i18n ), 'underscored' => 'height', 'type' => 'text', 'value' => '320px' );
+		$this->fields[] = array( 'name' => __( 'Empty Message', $this->i18n ), 'underscored' => 'emptymsg', 'type' => 'text', 'value' => __( 'This user has not activated their music player.', $this->i18n ) );
+		$this->fields[] = array( 'name' => __( 'Hide widget if empty', $this->i18n ), 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
+
+		$this->options 	= (array) get_option( 'slushman_bppw_settings' );
+		$quantity 		= $this->options['BP_profile_music_player_widget'];
+
+		// Create $selects for how many items select menu
+		for ( $i = 1; $i <= $quantity; $i++ ) {
+
+			$instance_selects[] = array( 'label' => $i, 'value' => $i );
+
+		} // End of for loop
+
+		$this->fields[] = array( 'name' => __( 'If you use multiple widgets: which one is this?', $this->i18n ), 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
 
  	} // End of __construct()
 
@@ -34,25 +44,28 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
  * @uses    oembed_transient
  * @uses    find_on_page
  */
-	function widget_output( $args, $instance ) {
+	function widget_output( $instance ) {
 
 		global $slushman_bp_profile_widgets, $slushkit;
 
-		$accountURL 	= xprofile_get_field_data( 'Music Player URL' );
-	 	$description 	= xprofile_get_field_data( 'Music Player Role' );
-	 	$width 			= $instance['width'];
-	 	$height 		= $instance['height'];
-	 	$service 		= $this->find_service( $accountURL );
+		$urlfield 	= __( 'Music Player URL', $this->i18n );
+		$rolefield	= __( 'Music Player Role', $this->i18n );
+		$url 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $urlfield );
+		$desc 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $rolefield );
+	 	$width 		= $instance['width'];
+	 	$height 	= $instance['height'];
+	 	$service 	= $this->find_service( $url );
 
-	 	// echo '<p>$service: ' . $service . '</p>';
+	 	//echo '<p>$url: ' . $url . '</p>';
+	 	//echo '<p>$service: ' . $service . '</p>';
 	 	
-	 	if ( empty( $accountURL ) || !$service ) {
+	 	if ( empty( $url ) || !$service ) {
 
 			echo '<p>' . ( !empty( $instance['emptymsg'] ) ? $instance['emptymsg'] : '' ) . '</p>';
 		
 		} else {
 
-			$oembed = $slushman_bp_profile_widgets->oembed_transient( $accountURL, $service, $width );
+			$oembed = $slushman_bp_profile_widgets->oembed_transient( $url, $service, $width );
 
 			if ( !$oembed && $service == 'bandcamp' ) {
 
@@ -62,17 +75,21 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 				// 	http://music.afterosmosis.com/track/exhale
 				// 	http://michaelestok.bandcamp.com/track/time-2
 
-				$which = $this->albumortrack( $accountURL );
+				$which = $this->albumortrack( $url );
+
+				//echo '<p>$which: ' . $which . '</p>';
 
 				if ( !$which ) {
 
-					echo '<p>The URL you entered is not a valid BandCamp URL.</p>';
+					echo '<p>' . __( 'The URL you entered is not a valid BandCamp URL.', $this->i18n ) . '</p>';
 
 				} else {
 
-					$bandcamp = $this->find_ID( $service, $accountURL, $which ); ?>
+					$bandcamp = $this->find_ID( $service, $url, $which );
 
-				 	<iframe style="border: 0; width: <?php echo $width; ?>; height: <?php echo ($width + 142); ?>px;" src="http://bandcamp.com/EmbeddedPlayer/<?php echo $which . $bandcamp; ?>/size=large/bgcol=ffffff/linkcol=0687f5/notracklist=true/transparent=true/" seamless></iframe><?php
+					//echo '<p>$bandcamp: ' . $bandcamp . '</p>';
+
+					?><iframe style="border: 0; width: <?php echo $width; ?>px; height: <?php echo $width+142; ?>px" src="<?php echo sprintf( 'http://bandcamp.com/EmbeddedPlayer/%s=%d/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/', $which, $bandcamp ); ?>" seamless></iframe><?php
 
 				} // End of $which check
 		 	
@@ -80,7 +97,7 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 		 	
 		 		// Input example: http://www.tunecore.com/music/thevibedials
 		 		
-		 		$tunecore = $this->find_ID( $service, $accountURL ); ?>
+		 		$tunecore = $this->find_ID( $service, $url ); ?>
 			 	
 			 	<object width="160" height="400" class="tunecore"><param name="movie" value="http://widget.tunecore.com/swf/tc_run_v_v2.swf?widget_id=<?php echo $tunecore; ?>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://widget.tunecore.com/swf/tc_run_v_v2.swf?widget_id=<?php echo $tunecore; ?>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="160" height="400"></embed></object><?php
 		 	
@@ -88,7 +105,7 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 		 	
 		 		// Input example: http://www.reverbnation.com/thevibedials
 		 		
-		 		$reverbnation = $this->find_ID( $service, $accountURL ); ?>
+		 		$reverbnation = $this->find_ID( $service, $url ); ?>
 
 		 		<iframe class="widget_iframe" src="http://www.reverbnation.com/widget_code/html_widget/artist_<?php echo $reverbnation; ?>?widget_id=50&pwc[design]=default&pwc[background_color]=%23333333&pwc[included_songs]=1&pwc[photo]=0%2C1&pwc[size]=fit" width="100%" height="<?php echo $height; ?>" frameborder="0" scrolling="no"></iframe><?php
 		 	
@@ -96,7 +113,7 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 		 	
 		 		// Input example: http://noisetrade.com/thevibedials/
 
-		 		$noisetrade = $this->find_ID( $service, $accountURL ); ?>
+		 		$noisetrade = $this->find_ID( $service, $url ); ?>
 			 	
 		 		<iframe src="http://noisetrade.com/service/sharewidget/?id=<?php echo $noisetrade; ?>" width="100%" height="<?php echo $height; ?>" scrolling="no" frameBorder="0"></iframe><?php
 		 	
@@ -112,7 +129,7 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 
 		} // End of empty checks
 	 	
-	 	echo '<p>' . ( isset( $description ) && !empty( $description ) ? $description : '' ) . '</p>';
+	 	echo '<p>' . ( isset( $desc ) && !empty( $desc ) ? $desc : '' ) . '</p>';
 
 	} // End of widget_output()
 
@@ -184,7 +201,7 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 				
 				echo '<div id="sidebar-me">';
 
-				$this->widget_output( $args, $instance );
+				$this->widget_output( $instance );
 
 				do_action( 'bp_sidebar_me' );
 					
@@ -386,7 +403,7 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 
  		if ( $service == 'bandcamp' ) {
 
- 			$id_args['start'] 	= $start;
+ 			$id_args['start'] 	= 'v=2/' . $start . '=';
  			$id_args['end'] 	= '/size=large/linkcol';
 
  		} elseif ( $service == 'noisetrade' ) {
@@ -442,7 +459,7 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 
 	    	$found = strpos( $page, $needle );
 
-	    	if ( $found !== FALSE ) { return $needle; }
+	    	if ( $found !== FALSE ) { return rtrim( $needle, '=' ); }
 
 	    } // End of foreach loop
 

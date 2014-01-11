@@ -34,8 +34,9 @@ Features
 1. Install and activate BuddyPress
 2. Upload the BP Profile Widgets folder to the `/wp-content/plugins/` directory
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Check which widget(s) you want to use on the BP Profile Widgets page under the 'Settings' menu
+4. Select how many copies of each widget(s) you want to use on the BP Profile Widgets page under the 'Settings' menu
 5. Drag one of the BP Profile widgets to a sidebar on the 'Widgets' page under the 'Appearance' menu
+6. If you opted to create more than one instance of a widget, select the instance number on each widget used.
 
 == Frequently Asked Questions ==
 
@@ -78,7 +79,7 @@ Bandcamp, SoundCloud, Tunecore, Reverbnation, Mixcloud, or Noisetrade. The user 
 
 = What players are available for the Video Player widget? =
 
-YouTube, Vimeo, Veoh, DailyMotion, Facebook, Flickr, Blip.tv, funnyordie.com, Hulu, Revision3.com, Viddler, Qik, and uStream. The user will need to enter the correct URL to make it work properly:
+YouTube, Vimeo, Veoh, DailyMotion, Facebook, Flickr, Blip.tv, funnyordie.com, Hulu, Revision3.com, Viddler, Qik, WordPress.tv, and uStream. The user will need to enter the correct URL to make it work properly:
 
 * YouTube long: http://www.youtube.com/watch?v=YYYJTlOYdm0
 * Youtube short: http://youtu.be/YYYJTlOYdm0
@@ -96,6 +97,9 @@ YouTube, Vimeo, Veoh, DailyMotion, Facebook, Flickr, Blip.tv, funnyordie.com, Hu
 * Revision3: http://revision3.com/destructoid/bl2-dlc-leak-tiny-tinas-assault-on-dragon-keep
 * Viddler: http://www.viddler.com/v/bdce8c7
 * Qik: http://qik.com/video/38782012
+* WordPress.tv: http://wordpress.tv/2013/10/26/chris-wilcoxson-how-to-build-your-first-widget/
+* Wistia: http://home.wistia.com/medias/e4a27b971d
+* Vine: https://vine.co/v/bjHh0zHdgZT
 
 
 = What galleries are available for the Photo Gallery widget? =
@@ -153,15 +157,18 @@ This has changed as of version 0.2. Now, the widgets will only appear on the pro
 == Changelog ==
 
 = 0.5 =
-* Added files and formatting for I10n.
+* Multiple Instances are possible now! You can have up to 5 of each widget on a profile.
+* Added files and formatting for i18n.
 * Fixed "hide if empty" option on all widgets.
-* Music Widget: removed all functions related to fetching data from DOM. Doesn't work on  every server and causes issues with some server configs.
+* Added bppw_get_profile_data(), which returns profile field data. For the first instance of a widget, it uses the field name without numbers and then begins using numbers based on the results of the first query.
+* Music Widget: removed all functions related to fetching data from DOM. Doesn't work on every server.
 * Music Widget: removed find_service_from_url(), it was replaced in the last version and there's no reason to keep it.
-* Music Widget: Simplified find_service() to make it DRY.
-* Music Widget: Simplified find_id() to go straight to finding the ID on page.
+* Music Widget: simplified find_service() to make it DRY.
+* Music Widget: simplified find_id() to go straight to finding the ID on page.
 * Music Widget: resolved bug that caused some players to display as "page cannot be found"
 * Music Widget: added albumortrack() to figure out if the URL is for an album, track, or is invalid
-* 
+* Music Widget: removed $args from widget_output() call
+* Video Widget: added WordPress.tv, Vine, and Wistia.
 
 = 0.4.2 =
 * BUG FIX: Changed find_service_on_page() to actually work.
@@ -200,7 +207,7 @@ This has changed as of version 0.2. Now, the widgets will only appear on the pro
 == Upgrade Notice ==
 
 = 0.5 =
-
+Multiple instances, internationalization, and bug fixes!
 
 = 0.4.2 =
 * BUG FIX: Changed find_service_on_page() to work with server configs.

@@ -8,13 +8,11 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
  	function __construct() {
  	
  		$name 					= __( 'BP Profile Display RSS' );
+ 		$this->i18n				= 'bp-profile-widgets';
  		$opts['description'] 	= __( 'Add an RSS or Atom feed to your BuddyPress profile page.', 'slushman-bp-profile-rss-widget' );
  		
  		parent::__construct( false, $name, $opts );
  		
-		// Future i10n support
-		// load_plugin_textdomain( PLUGIN_LOCALE, false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
-		
 		// Create $selects for how many items select menu
  		for ( $i = 0; $i <= 20; $i++  ) {
 
@@ -24,11 +22,23 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
 
 		// Form fields
 		// required: name, underscored, type, & value. optional: desc, sels, size
-		$this->fields[] = array( 'name' => 'How many items?', 'underscored' => 'items', 'type' => 'select', 'value' => 10, 'sels' => $item_selects );
-		$this->fields[] = array( 'name' => 'Display item content?', 'underscored' => 'show_summary', 'type' => 'checkbox', 'value' => 0 );
-		$this->fields[] = array( 'name' => 'Display item author if available?', 'underscored' => 'show_author', 'type' => 'checkbox', 'value' => 0 );
-		$this->fields[] = array( 'name' => 'Display item date?', 'underscored' => 'show_date', 'type' => 'checkbox', 'value' => 0 );
-		$this->fields[] = array( 'name' => 'Hide widget if empty', 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
+		$this->fields[] = array( 'name' => __( 'How many items?', $this->i18n ), 'underscored' => 'items', 'type' => 'select', 'value' => 10, 'sels' => $item_selects );
+		$this->fields[] = array( 'name' => __( 'Display item content?', $this->i18n ), 'underscored' => 'show_summary', 'type' => 'checkbox', 'value' => 0 );
+		$this->fields[] = array( 'name' => __( 'Display item author if available?', $this->i18n ), 'underscored' => 'show_author', 'type' => 'checkbox', 'value' => 0 );
+		$this->fields[] = array( 'name' => __( 'Display item date?', $this->i18n ), 'underscored' => 'show_date', 'type' => 'checkbox', 'value' => 0 );
+		$this->fields[] = array( 'name' => __( 'Hide widget if empty', $this->i18n ), 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
+
+		$this->options 	= (array) get_option( 'slushman_bppw_settings' );
+		$quantity 		= $this->options['BP_profile_rss_widget'];
+
+		// Create $selects for how many items select menu
+		for ( $i = 1; $i <= $quantity; $i++ ) {
+
+			$instance_selects[] = array( 'label' => $i, 'value' => $i );
+
+		} // End of for loop
+
+		$this->fields[] = array( 'name' => 'If you use multiple widgets: which one is this?', 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
 
  	} // End of __construct()
 
@@ -63,18 +73,15 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
 
 			if ( is_admin() || current_user_can( 'manage_options' ) ) {
 
-				echo '<p>' . sprintf( __( '<strong>RSS Error</strong>: %s' ), $rss->get_error_message() ) . '</p>';
+				echo '<p><strong>' . sprintf( __( 'RSS Error: %s' ), $rss->get_error_message() ) . '</strong></p>';
 
 			}
 
 			return;
 		
-		}
+		} // End of WP error check
 
 		$default_args 	= array( 'show_author' => 0, 'show_date' => 0, 'show_summary' => 0, 'hide_empty' => 0 );
-		$args 			= wp_parse_args( $args, $default_args );
-
-		extract( $args, EXTR_SKIP );
 
 		if ( $instance['items'] < 1 || 20 < $instance['items'] ) {
 
@@ -218,9 +225,12 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
  */	 	  
   	function widget( $args, $instance ) {
 
+  		global $slushman_bp_profile_widgets;
+
   		if ( bp_is_user_profile() ) {
 
-  			$url = xprofile_get_field_data( 'RSS Feed URL' );
+  			$urlfield 	= __( 'RSS Feed URL', $this->i18n );
+			$url 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $urlfield );
 
 			if ( !empty( $url ) || $instance['hide_empty'] == 0 ) {
 

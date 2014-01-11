@@ -8,20 +8,30 @@ class slushman_bp_profile_video_player_widget extends WP_Widget {
 	function __construct() {
 	
 		$name 						= 'BP Profile Video Player';
+		$this->i18n					= 'bp-profile-widgets';
 		$widget_opts['description'] = __( 'Add a video player to your BuddyPress profile page.', 'slushman-bp-profile-video-player' );
 	
 		parent::__construct( false, $name, $widget_opts );
 		
-		// Future i10n support
-		// load_plugin_textdomain( PLUGIN_LOCALE, false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
-		
 		// Form fields
 		// required: name, underscored, type, & value. optional: desc, sels, size
-		$this->fields[] = array( 'name' => 'Title', 'underscored' => 'title', 'type' => 'text', 'value' => 'Video Player' );
-		$this->fields[] = array( 'name' => 'Width', 'underscored' => 'width', 'type' => 'text', 'value' => '' );
-		$this->fields[] = array( 'name' => 'Empty Message', 'underscored' => 'emptymsg', 'type' => 'text', 'value' => 'This user has not activated their video player.' );
-		$this->fields[] = array( 'name' => 'Hide widget if empty', 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
-		$this->fields[] = array( 'name' => 'Aspect Ratio', 'underscored' => 'aspect', 'type' => 'select', 'value' => 'Normal', 'sels' => array( array( 'label' => 'Normal', 'value' => 'Normal' ), array( 'label' => 'HD', 'value' => 'HD' ) ) );
+		$this->fields[] = array( 'name' => __( 'Title', $this->i18n ), 'underscored' => 'title', 'type' => 'text', 'value' => 'Video Player' );
+		$this->fields[] = array( 'name' => __( 'Width', $this->i18n ), 'underscored' => 'width', 'type' => 'text', 'value' => '' );
+		$this->fields[] = array( 'name' => __( 'Empty Message', $this->i18n ), 'underscored' => 'emptymsg', 'type' => 'text', 'value' => __( 'This user has not activated their video player.', $this->i18n ) );
+		$this->fields[] = array( 'name' => __( 'Hide widget if empty', $this->i18n ), 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
+		$this->fields[] = array( 'name' => __( 'Aspect Ratio', $this->i18n ), 'underscored' => 'aspect', 'type' => 'select', 'value' => __( 'Normal', $this->i18n ), 'sels' => array( array( 'label' => __( 'Normal', $this->i18n ), 'value' => __( 'Normal', $this->i18n ) ), array( 'label' => __( 'HD', $this->i18n ), 'value' => __( 'HD', $this->i18n ) ) ) );
+
+		$this->options 	= (array) get_option( 'slushman_bppw_settings' );
+		$quantity 		= $this->options['BP_profile_video_player_widget'];
+
+		// Create $selects for how many items select menu
+		for ( $i = 1; $i <= $quantity; $i++ ) {
+
+			$instance_selects[] = array( 'label' => $i, 'value' => $i );
+
+		} // End of for loop
+
+		$this->fields[] = array( 'name' => 'If you use multiple widgets: which one is this?', 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
 		
 	} // End of __construct()
 
@@ -38,12 +48,14 @@ class slushman_bp_profile_video_player_widget extends WP_Widget {
 		global $slushman_bp_profile_widgets;
 
 		// Get widget options and profile data
-		$service = $videoURL = $description = $width = $aspect = $multiplier = $height = $control = '';
+		$service = $url = $desc = $width = $aspect = $multiplier = $height = $control = '';
 
-		$videoURL		= xprofile_get_field_data( 'Video Player URL' );	
-		$description 	= xprofile_get_field_data( 'Video Player Role' );
-		$width 			= $instance['width'];
-		$aspect 		= $instance['aspect'];
+		$urlfield 	= __( 'Video Player URL', $this->i18n );
+		$rolefield	= __( 'Video Player Role', $this->i18n );
+		$url 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $urlfield );
+		$desc 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $rolefield );
+		$width 		= $instance['width'];
+		$aspect		= $instance['aspect'];
 
 		// Determine the height from the width and aspect ratio in the Widget options
 
@@ -55,13 +67,13 @@ class slushman_bp_profile_video_player_widget extends WP_Widget {
 
 		if ( !empty( $width ) && !empty( $multiplier ) ) {
 			
-			if ( !empty( $videoURL ) ) {
+			if ( !empty( $url ) ) {
 
-				$host 		= parse_url( $videoURL, PHP_URL_HOST );
+				$host 		= parse_url( $url, PHP_URL_HOST );
 			 	$exp		= explode( '.', $host );
 			 	$service 	= ( count( $exp ) >= 3 ? $exp[1] : $exp[0] );
 			 	
-			 } // End of $videoURL check
+			 } // End of $url check
 		 	
 		 	$multiplier = ( $service == 'viddler' ? .5625 : $multiplier );
 			$control 	= ( $service == 'youtube' || $service == 'youtu' ? 25 : 0 );
@@ -74,29 +86,31 @@ class slushman_bp_profile_video_player_widget extends WP_Widget {
 		} // End of empty checks
 		
 		// Get the correct correct video ID based on the service
-		if ( empty( $videoURL ) || empty( $service ) ) {
+		if ( empty( $url ) || empty( $service ) ) {
 
 			echo '<p>' . ( !empty( $instance['emptymsg'] ) ? $instance['emptymsg'] : '' ) . '</p>';
 		
 		} else {
 
-			$oembed = $slushman_bp_profile_widgets->oembed_transient( $videoURL, $service, $width, $height );
+			$oembed = $slushman_bp_profile_widgets->oembed_transient( $url, $service, $width, $height );
 
 			if ( !$oembed && $service == 'facebook' ) {
 			
 				// Input Example: https://www.facebook.com/photo.php?v=10201027508430408
 
-		 		$videoID = end( explode( '=', $videoURL ) ); ?>
+				$explode = explode( '=', $url );
+		 		$videoID = end( $explode );
 
-				<iframe src="https://www.facebook.com/video/embed?video_id=<?php echo $videoID; ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" frameborder="0"></iframe><?php
+				?><iframe src="https://www.facebook.com/video/embed?video_id=<?php echo $videoID; ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" frameborder="0"></iframe><?php
 						
 			} elseif ( !$oembed && $service == 'veoh' ) {
 			
 				// Input Example: http://www.veoh.com/watch/v21024172CTxdMmR4
 				
-				$videoID = end( explode( '/', $videoURL ) ); ?>
+				$explode = explode( '/', $url );
+				$videoID = end( $explode );
 			
-				<object width="<?php echo $width; ?>" height="<?php echo $height; ?>" id="veohFlashPlayer" name="veohFlashPlayer">
+				?><object width="<?php echo $width; ?>" height="<?php echo $height; ?>" id="veohFlashPlayer" name="veohFlashPlayer">
 					<param name="movie" value="http://www.veoh.com/swf/webplayer/WebPlayer.swf?version=AFrontend.5.7.0.1390&permalinkId=<?php echo $videoID; ?>&player=videodetailsembedded&videoAutoPlay=0&id=anonymous"></param>
 					<param name="allowFullScreen" value="true"></param>
 					<param name="allowscriptaccess" value="always"></param>
@@ -107,9 +121,19 @@ class slushman_bp_profile_video_player_widget extends WP_Widget {
 			
 				// Input Example: http://www.ustream.tv/recorded/31427029/highlight/343133
 				
-				$videoID = end( explode( '.tv/', $videoURL ) ); ?>
+				$explode = explode( '.tv/', $url );
+				$videoID = end( $explode );
 
-				<iframe width="<?php echo $width; ?>" height="<?php echo $height; ?>" src="http://www.ustream.tv/embed/<?php echo $videoID; ?>?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe><?php
+				?><iframe width="<?php echo $width; ?>" height="<?php echo $height; ?>" src="http://www.ustream.tv/embed/<?php echo $videoID; ?>?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe><?php
+
+			} elseif ( !$oembed && $service == 'vine' ) {
+
+				// Input example: https://vine.co/v/bjHh0zHdgZT
+
+				$explode = explode( '/', $url );
+				$videoID = end( $explode );
+
+				?><iframe class="vine-embed" src="https://vine.co/v/<?php echo $videoID; ?>/embed/simple" width="<?php echo $width; ?>" height="<?php echo $height; ?>" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script><?php
 
 			} else {
 
@@ -127,14 +151,16 @@ class slushman_bp_profile_video_player_widget extends WP_Widget {
 				// 		http://revision3.com/destructoid/bl2-dlc-leak-tiny-tinas-assault-on-dragon-keep
 				// 		http://www.viddler.com/v/bdce8c7
 				// 		http://qik.com/video/38782012
+				// 		http://home.wistia.com/medias/e4a27b971d
+				// 		http://wordpress.tv/2013/10/26/chris-wilcoxson-how-to-build-your-first-widget/
 		
 				echo $oembed;
 
 			} // End of embed codes
 
-		} // End of $videoURL & $service check
+		} // End of $url & $service check
 		
-		echo '<p>' . ( isset( $description ) && !empty( $description ) ? $description : '' ) . '</p>';
+		echo '<p>' . ( isset( $desc ) && !empty( $desc ) ? $desc : '' ) . '</p>';
 
 	} // End of widget_output()
 

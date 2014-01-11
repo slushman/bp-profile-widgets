@@ -8,18 +8,28 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
 	function __construct() {
 	
 		$name 						= 'BP Profile Text Box';
+		$this->i18n					= 'bp-profile-widgets';
 		$widget_opts['description'] = __( 'Add a text box to your BuddyPress profile page.', 'slushman-bp-profile-text-box' );
 	
 		parent::WP_Widget( false, $name, $widget_opts );
 
-		// Future i10n support
-		// load_plugin_textdomain( PLUGIN_LOCALE, false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
-		
 		// Form fields
 		// required: name, underscored, type, & value. optional: desc, sels, size
-		$this->fields[] = array( 'name' => 'Title', 'underscored' => 'title', 'type' => 'text', 'value' => 'Text Box' );
-		$this->fields[] = array( 'name' => 'Automatically add paragraphs', 'underscored' => 'filter', 'type' => 'checkbox', 'value' => 0 );
-		$this->fields[] = array( 'name' => 'Hide widget if empty', 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
+		$this->fields[] = array( 'name' => __( 'Title', $this->i18n ), 'underscored' => 'title', 'type' => 'text', 'value' => 'Text Box' );
+		$this->fields[] = array( 'name' => __( 'Automatically add paragraphs', $this->i18n ), 'underscored' => 'filter', 'type' => 'checkbox', 'value' => 0 );
+		$this->fields[] = array( 'name' => __( 'Hide widget if empty', $this->i18n ), 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
+
+		$this->options 	= (array) get_option( 'slushman_bppw_settings' );
+		$quantity 		= $this->options['BP_profile_text_box_widget'];
+
+		// Create $selects for how many items select menu
+		for ( $i = 1; $i <= $quantity; $i++ ) {
+
+			$instance_selects[] = array( 'label' => $i, 'value' => $i );
+
+		} // End of for loop
+
+		$this->fields[] = array( 'name' => 'If you use multiple widgets: which one is this?', 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
 	
 	} // End of __construct()
 
@@ -32,8 +42,11 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
  */
 	function widget_output( $args, $instance ) {
 
-		$text = xprofile_get_field_data( "Custom Text Box" );
-		
+		global $slushman_bp_profile_widgets;
+
+		$textfield 	= __( 'Text Box', $this->i18n );
+		$text 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $textfield );
+
 		echo '<div class="bpcustomtextwidget">' . ( !empty( $instance['filter'] ) ? wpautop( $text ) : $text ) . '</div>';
 
 	} // End of widget_output()	
@@ -90,9 +103,10 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
 
 		if ( bp_is_user_profile() ) {
 
-			$url = xprofile_get_field_data( 'Custom Text Box' );
+			$textfield 	= __( 'Text Box', $this->i18n );
+			$text 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $textfield );
 
-			if ( !empty( $url ) || $instance['hide_empty'] == 0 ) {
+			if ( !empty( $text ) || $instance['hide_empty'] == 0 ) {
 
 				extract( $args );
 

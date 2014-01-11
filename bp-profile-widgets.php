@@ -5,6 +5,8 @@ Plugin Name: BP Profile Widgets
 Plugin URI: http://slushman.com/plugins/bp-profile-widgets
 Description: BP Profile Widgets allows BuddyPress users to embed a music player, a video player, a photo gallery, and/or a custom text widget on the sidebar of the user's profile page using custom profile fields from their profile form. This plugin requires that BuddyPress be installed and the theme have at least one sidebar.
 Version: 0.5
+Text Domain: bp-profile-widgets
+Domain Path: /languages
 Author: Slushman
 Author URI: http://slushman.com
 License: GPLv2
@@ -97,15 +99,11 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 			// Register the widget if its selected
             add_action( 'widgets_init', array( $this, 'widgets_init' ) );
 
-            // Add oEmbed support for uStream & new Viddler
-            add_action( 'plugins_loaded', array( $this, 'enable_oembed_ustream' ), 7 );
+            // Add new oEmbed providers
+            add_action( 'plugins_loaded', array( $this, 'add_oembed_providers' ), 7 );
 
-            // Add oEmbed support for Mixcloud
-            add_action( 'plugins_loaded', array( $this, 'enable_oembed_mixcloud' ), 7 );
-
-            // I10n
-            load_plugin_textdomain( 'yourplugin', false, basename( dirname( __FILE__ ) ) . '/languages' );
-
+            // l10n
+            add_action( 'init', array( $this, 'l10n_init' ) );
 
 			$this->constants 	= $this->constants + array( 'file' => __FILE__ );
 			$this->options 		= (array) get_option( $this->constants['name'] );
@@ -183,7 +181,7 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 
 				if ( isset( $section['desc'] ) && !empty( $section['desc'] ) ) {
 	        
-	                $section['desc'] 	= '<div class="inside">' . $section['desc'] . '</div>';
+	                $section['desc'] 	= '<div class="inside">' . __( $section['desc'] ) . '</div>';
 	                $callback 			= create_function( '', 'echo "' . str_replace( '"', '\"', $section['desc'] ) . '";' );
 	        
 	            } else {
@@ -322,7 +320,7 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 			$plugin = get_plugin_data( $this->constants['file'] ); ?>
 			<div class="wrap">
 			<div class="icon32" style="background-image:url(<?php echo plugins_url( 'images/logo.png', $this->constants['file'] ); ?>); background-repeat:no-repeat;"></div>
-			<h2><?php echo $plugin['Name']; ?></h2><?php
+			<h2><?php _e( $plugin['Name'], $this->constants['i18n'] ); ?></h2><?php
 			//settings_errors();
 			?><form method="post" action="options.php"><?php
 			
@@ -345,7 +343,7 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
  */			
 		function settings_link( $links ) {
 		
-			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . $this->constants['name'] ), __( 'Settings' ) );
+			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . $this->constants['name'] ), __( 'Settings', $this->constants['i18n'] ) );
 			
 			array_unshift( $links, $settings_link );
 			
@@ -365,8 +363,8 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 			if ( $this->constants['menu'] == 'options' ) {
 
 				add_options_page( 
-					__( $this->constants['plug'] . ' Settings' ), 
-					__( $this->constants['plug'] ), 
+					__( $this->constants['plug'] . ' Settings', $this->constants['i18n'] ), 
+					__( $this->constants['plug'], $this->constants['i18n'] ), 
 					'manage_options', 
 					$this->constants['name'], 
 					array( $this, 'get_page' ) 
@@ -376,8 +374,8 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 
 				add_submenu_page(
 					'edit.php?post_type=' . $this->constants['cpt'],
-					__( $this->constants['plug'] . ' Settings' ),
-					__( 'Settings' ),
+					__( $this->constants['plug'] . ' Settings', $this->constants['i18n'] ),
+					__( 'Settings', $this->constants['i18n'] ),
 					'edit_posts',
 					$this->constants['slug'] . '-settings',
 					array( $this, 'get_page' )
@@ -388,6 +386,16 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 		} // End of add_menu()
    
 
+
+/* ==========================================================================
+   Internationalization and Localization
+   ========================================================================== */
+
+	   	function l10n_init() {
+
+	   		load_plugin_textdomain( $this->constants['i18n'], false, basename( dirname( __FILE__ ) ) . '/languages' );
+
+	   	} // End of l10n_init()
 		
 /* ==========================================================================
    Plugin Functions
@@ -410,7 +418,7 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 			
 			foreach ( $this->fields as $field ) {
 			
-				if ( $this->options[$field['underscored']] == 1 ) { 
+				if ( $this->options[$field['underscored']] > 0 ) { 
 					
 						$sel++;
 					
@@ -418,11 +426,11 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 				
 			} // End of $fields foreach
 
-			$groupcheck = $this->slushkit->xprofile_get_group_id_from_name( 'Profile Widgets' );
+			$groupcheck = $this->slushkit->xprofile_get_group_id_from_name( __( 'Profile Widgets', $this->constants['i18n'] ) );
 
 			if ( $sel > 0 && !$groupcheck ) {
 				
-				$group_args['name'] = 'Profile Widgets';
+				$group_args['name'] = __( 'Profile Widgets', $this->constants['i18n'] );
 				
 				xprofile_insert_field_group( $group_args );
 				
@@ -446,131 +454,187 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
  */
 		function create_profile_fields() {
 		
-			$group_id 	= $this->xprofile_get_group_id_from_name( 'Profile Widgets' );
-			$i 			= 0;
+			$group_id = $this->xprofile_get_group_id_from_name( __( 'Profile Widgets', $this->constants['i18n'] ) );
 
 			if ( $group_id == 0 ) { return; }
+
+			foreach ( $this->profiles as $widget_name => $widget_fields ) {
+				
+				$quantity = $this->options['BP_profile_' . $widget_name . '_widget'];
+
+				if ( empty( $quantity ) ) { 
+
+					$this->bppw_remove_profile_fields( $widget_name );
+					continue; 
+
+				}
+
+				for( $i = 1; $i <= $quantity; $i++ ) {
+
+					foreach ( $widget_fields as $field_name => $field_info ) {
+
+						$capped_name = ( $widget_name == 'rss' ? strtoupper( $widget_name ) : str_replace( '_', ' ', $widget_name ) );
+
+						if ( $field_name === 0 ) { $field_name = ''; }
+
+						/* 
+							If $i is 1,
+								Check for a field without the instance number.
+						 	If it exists, 
+						 		Continue to the next number.
+						 	If not, 
+						 		Check for a field with the instance number.
+						 	If it exists,
+						 		Continue to the next number.
+						 	If not,
+						 		Create it with the number.
+						 	This should maintain compatibility with current installations where the field name would not have the instance number 
+						 */
+						if ( $i == 1 ) {
+
+							$tests = array( '', ' ' . $i );
+
+							foreach ( $tests as $test ) {
+
+								$fieldname = ucwords( $capped_name . ' ' . str_replace( '_', ' ', $field_name ) . $test );
+
+								$exists = xprofile_get_field_id_from_name( $fieldname );
+
+								if ( !empty( $exists ) ) { break; }
+
+							} // End of $tests foreach loop
+
+						} else {
+
+							$fieldname = ucwords( $capped_name . ' ' . str_replace( '_', ' ', $field_name ) ) . ' ' . $i;
+
+							$exists = xprofile_get_field_id_from_name( $fieldname );
+
+						} // End of $i check
+						
+						if ( empty( $exists ) ) {
+
+							$field_args['field_group_id'] 			= $group_id;
+							$field_args['name'] 					= $fieldname;
+							$field_args['can_delete'] 				= false;
+							$field_args['field_order'] 				= $i + 1;
+							$field_args['is_required'] 				= false;
+							$field_args['type'] 					= $field_info['type'];
+							$field_args['description']				= $field_info['desc'];
 							
-			$fields[$i]['widget'] 	= 'Music Player';
-			$fields[$i]['name'] 	= 'Music Player URL';
-			$fields[$i]['type'] 	= 'textbox';
-			$fields[$i]['desc'] 	= 'Please enter the URL for your album / set / profile from any of the following services: Bandcamp, SoundCloud, Reverbnation, Tunecore, Mixcloud, or Noisetrade.';
-			$i++;
+							$field_id = xprofile_insert_field( $field_args );
 
-			$fields[$i]['widget'] 	= 'Music Player';
-			$fields[$i]['name'] 	= 'Music Player Role';
-			$fields[$i]['type'] 	= 'textbox';
-			$fields[$i]['desc'] 	= 'Please explain your role in the music (artist, writer, player, producer, etc).';
-			$i++;
-			
-			$fields[$i]['widget'] 	= 'Video Player';
-			$fields[$i]['name'] 	= 'Video Player URL';
-			$fields[$i]['type'] 	= 'textbox';
-			$fields[$i]['desc'] 	= 'Please enter the URL to the YouTube, Vimeo, Veoh, DailyMotion, Blip.tv, uStream, or Facebook video you want to display on your profile.';
-			$i++;
-			
-			$fields[$i]['widget'] 	= 'Video Player';
-			$fields[$i]['name'] 	= 'Video Player Role';
-			$fields[$i]['type'] 	= 'textbox';
-			$fields[$i]['desc'] 	= 'Please explain your role in the video (actor, writer, crew, producer, etc).';
-			$i++;
-			
-			$fields[$i]['widget'] 	= 'Photo Gallery';
-			$fields[$i]['name'] 	= 'Photo Gallery URL';
-			$fields[$i]['type'] 	= 'textbox';
-			$fields[$i]['desc'] 	= 'Please enter the URL for the set / gallery / album / profile from any of the following services: Flickr, Picasa, Photobucket, Fotki, dotPhoto, or Imgur.';
-			$i++;
-
-			$fields[$i]['widget'] 	= 'Photo Gallery';
-			$fields[$i]['name'] 	= 'Photo Gallery Role';
-			$fields[$i]['type'] 	= 'textbox';
-			$fields[$i]['desc'] 	= 'Please explain your role in the gallery (model, photographer, editor, etc).';
-			$i++;
-			
-			$fields[$i]['widget'] 	= 'Text Box';
-			$fields[$i]['name'] 	= 'Custom Text Box';
-			$fields[$i]['type'] 	= 'textarea';
-			$fields[$i]['desc'] 	= 'Please enter the text you want to appear on your profile. HTML is allowed.';
-			$i++;
-
-			$fields[$i]['widget'] 	= 'RSS';
-			$fields[$i]['name'] 	= 'RSS Feed URL';
-			$fields[$i]['type'] 	= 'textbox';
-			$fields[$i]['desc'] 	= 'Please enter the URL for the RSS or Atom feed you want to appear on your profile.';
-			$i++;
-			
-			foreach ( $fields as $key => $field ) {
-				
-				$under 	= str_replace( ' ', '_', strtolower( $field['widget'] ) );
-				$check 	= $this->options['BP_profile_' . $under . '_widget'];
-
-				if ( $check == 1 ) {
-				
-					$field_args['field_group_id'] 		= $group_id;
-					$field_args['name'] 				= $field['name'];
-					$field_args['can_delete'] 			= false;
-					$field_args['field_order'] 			= $key + 1;
-					$field_args['is_required'] 			= false;
-					$field_args['type'] 				= $field['type'];
-					$field_args['description']			= $field['desc'];
-					$fields_args['default-visibility'] 	= 'adminsonly';
+						} // End of $textfield empty check
 					
-					$exists = xprofile_get_field_id_from_name( $field['name'] );
-						
-					if ( empty( $exists ) ) {
-					
-						$field_id = xprofile_insert_field( $field_args );
+						if ( !empty( $field_id ) ) {
+							
+							bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'adminsonly' );
+							bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'disabled' );
 
-					} // End of $textfield empty check
-				
-					if ( !empty( $field_id ) ) {
-						
-						bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'adminsonly' );
-						bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'disabled' );
+						} // End of $field_id check
 
-					} // End of $field_id check
-				
-				} elseif ( $check == 0 ) {
-					
-					$id = xprofile_get_field_id_from_name( $field['name'] );
-					
-					if ( !empty( $id ) ) {
-				
-						xprofile_delete_field( $id );
-						
-					} // End of $id1 empty check
-					
-				} // End of $selcheck check
-				
-			} // End of $fields foreach
+					} // End of $widget_fields foreach loop
+
+				} // End of for loop
+
+			} // End of $this->profiles foreach
 
 		} // End of create_profile_fields()
 
 /**
- * Adds uStream to the list of oEmbed providers
+ * Deletes any and all profile fields for any particular widget
  * 
- * @since	0.1
- *
- * @uses wp_oembed_add_provider
+ * @param	string		$widget_name	The name of the widget to delete profile fields
  */
-		function enable_oembed_ustream() {
+		function bppw_remove_profile_fields( $widget_name ) {
 
-			wp_oembed_add_provider( '#http://(www\.)?ustream.tv/*#i', 'http://www.ustream.tv/oembed', true );
+			if ( $widget_name == 'text_box' ) {
 
-		} // End of enable_oembed_ustream()
+				$removes = array( 'text' );
+
+			} elseif ( $widget_name == 'rss' ) {
+
+				$removes = array( 'URL' );
+
+			} else {
+
+				$removes = array( 'URL', 'Role' );
+
+			} // End of $widget_name check
+
+			foreach ( $removes as $remove ) {
+
+				$remove = ( $remove == 'text' ? '' : ' ' . $remove );
+
+				$field_name = __( ucwords( str_replace( '_', ' ', $widget_name ) ) . $remove, $this->constants['i18n'] );
+				$testname 	= $field_name;
+				$count 		= 0;
+				
+				do {
+					
+					$id = xprofile_get_field_id_from_name( $field_name );
+
+					if ( !empty( $id ) ) {
+					
+						xprofile_delete_field( $id );
+					
+					}
+
+					$count++;
+					$field_name = $testname . ' ' . $count;
+				
+				} while ( $count <= 5 );
+
+			} // End of $removes foreach loop
+
+		} // End of bppw_remove_profile_fields()
 
 /**
- * Adds MixCloud to the list of oEmbed providers
- * 
- * @since	0.1
+ * Gets the profile data for a particular field. Checks that field for potential
+ * numbers after the name.
  *
- * @uses wp_oembed_add_provider
+ * @param 	array 		$instance 		The widget instance
+ * @param 	$string 	$field_name 	The name of the field to check
+ * 
+ * @return  mixed 		The data from the profile field to return
  */
-		function enable_oembed_mixcloud() {
+		function bppw_get_profile_data( $instance, $field_name ) {
+
+			$number = $instance['instance_number'];
+
+			if ( $number == 1 ) {
+
+				$data = xprofile_get_field_data( $field_name );
+
+				if ( empty( $data ) ) {
+
+					$data = xprofile_get_field_data( $field_name . ' ' . $number );
+
+				}
+
+			} else {
+
+				$data = xprofile_get_field_data( $field_name . ' ' . $number );
+
+			} // End of $number check
+
+			return $data;
+
+		} // End of bppw_get_profile_data()
+
+/**
+ * Adds several new options to the list of oEmbed providers
+ * 
+ * @since	0.5
+ *
+ * @uses	wp_oembed_add_provider
+ */
+		function add_oembed_providers() {
 
 			wp_oembed_add_provider( '#http://(www\.)?mixcloud.com/*#i', 'http://www.mixcloud.com/oembed', true );
+			wp_oembed_add_provider( '/https?:\/\/(.+)?(wistia.com|wi.st)\/.*/', 'http://fast.wistia.com/oembed', true );
 
-		} // End of enable_oembed_ustream()		
+		} // End of add_oembed_providers()
 
 /**
  * Returns the oEmbed code from either a saved transient or from the service's site
@@ -636,7 +700,7 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 
 			foreach ( $this->fields as $field ) {
 				
-				if ( $this->options[$field['underscored']] == 1 ) { 
+				if ( $this->options[$field['underscored']] > 0 ) { 
 				
 					register_widget( 'slushman_' . $field['underscored'] );
 			
