@@ -183,9 +183,12 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
  */	 	  
   	function widget( $args, $instance ) {
 
-		if ( bp_is_user_profile() ) {
+		global $slushman_bp_profile_widgets;
 
-			$url = xprofile_get_field_data( 'Music Player URL' );
+  		if ( bp_is_user_profile() ) {
+
+  			$urlfield 	= __( 'Music Player URL', $this->i18n );
+			$url 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $urlfield );
 
 			if ( !empty( $url ) || $instance['hide_empty'] == 0 ) {
 

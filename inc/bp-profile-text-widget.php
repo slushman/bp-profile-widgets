@@ -101,6 +101,8 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
  */		
 	function widget( $args, $instance ) {
 
+		global $slushman_bp_profile_widgets;
+
 		if ( bp_is_user_profile() ) {
 
 			$textfield 	= __( 'Text Box', $this->i18n );

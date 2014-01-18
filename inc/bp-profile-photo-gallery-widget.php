@@ -165,9 +165,6 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 
 				<iframe class="imgur-album" width="<?php echo $width; ?>" height="<?php echo $height; ?>" frameborder="0" src="http://imgur.com/a/<?php echo $albumID; ?>/embed"></iframe><?php
 
-
-				<object width="450" height="298"><param name="movie" value="http://backend.deviantart.com/embed/view.swf?1"><param name="flashvars" value="id=425793394&width=1337"><param name="allowScriptAccess" value="always"><embed src="http://backend.deviantart.com/embed/view.swf?1" type="application/x-shockwave-flash" width="450" height="298" flashvars="id=425793394&width=1337" allowscriptaccess="always"></embed></object>
-
 			} else {
 
 				// Input Examples: 
@@ -223,9 +220,12 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
  */	
 	function widget( $args, $instance ) {
 
-		if ( bp_is_user_profile() ) {
+		global $slushman_bp_profile_widgets;
 
-			$url = xprofile_get_field_data( 'Photo Gallery URL' );
+  		if ( bp_is_user_profile() ) {
+
+  			$urlfield 	= __( 'Photo Gallery URL', $this->i18n );
+			$url 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $urlfield );
 
 			if ( !empty( $url ) || $instance['hide_empty'] == 0 ) {
 

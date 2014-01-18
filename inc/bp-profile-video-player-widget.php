@@ -204,9 +204,12 @@ class slushman_bp_profile_video_player_widget extends WP_Widget {
  */	
 	function widget( $args, $instance ) {
 		
+		global $slushman_bp_profile_widgets;
+
 		if ( bp_is_user_profile() ) {
 
-			$url = xprofile_get_field_data( 'Video Player URL' );
+			$urlfield 	= __( 'Video Player URL', $this->i18n );
+			$url 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $urlfield );
 
 			if ( !empty( $url ) || $instance['hide_empty'] == 0 ) {
 

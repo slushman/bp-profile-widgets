@@ -81,7 +81,7 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
 		
 		} // End of WP error check
 
-		$default_args 	= array( 'show_author' => 0, 'show_date' => 0, 'show_summary' => 0, 'hide_empty' => 0 );
+		$default_args = array( 'show_author' => 0, 'show_date' => 0, 'show_summary' => 0, 'hide_empty' => 0 );
 
 		if ( $instance['items'] < 1 || 20 < $instance['items'] ) {
 
