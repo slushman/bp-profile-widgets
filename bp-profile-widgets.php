@@ -548,7 +548,7 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
  */
 		function bppw_remove_profile_fields( $widget_name ) {
 
-			if ( $widget_name == 'text_box' ) {
+			if ( $widget_name == 'bppw_text' ) {
 
 				$removes = array( 'text' );
 

@@ -7,9 +7,9 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
  */
 	function __construct() {
 	
-		$name 						= 'BP Profile Photo Gallery';
 		$this->i18n					= 'bp-profile-widgets';
-		$widget_opts['description'] = __( 'Add a photo gallery to your BuddyPress profile page.', 'slushman-bp-profile-photo-gallery' );
+		$name 						= __( 'BP Profile Photo Gallery', $this->i18n );
+		$widget_opts['description'] = __( 'Add a photo gallery to your BuddyPress profile page.', $this->i18n );
 	
 		parent::__construct( false, $name, $widget_opts );
 
@@ -31,7 +31,7 @@ class slushman_bp_profile_photo_gallery_widget extends WP_Widget {
 
 		} // End of for loop
 
-		$this->fields[] = array( 'name' => 'If you use multiple widgets: which one is this?', 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
+		$this->fields[] = array( 'name' => __( 'If you use multiple widgets: which one is this?', $this->i18n ), 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
 
 	} // End of __construct()
 

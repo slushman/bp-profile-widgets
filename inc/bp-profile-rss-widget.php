@@ -7,9 +7,9 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
  */
  	function __construct() {
  	
- 		$name 					= __( 'BP Profile Display RSS' );
  		$this->i18n				= 'bp-profile-widgets';
- 		$opts['description'] 	= __( 'Add an RSS or Atom feed to your BuddyPress profile page.', 'slushman-bp-profile-rss-widget' );
+ 		$name 					= __( 'BP Profile Display RSS', $this->i18n );
+ 		$opts['description'] 	= __( 'Add an RSS or Atom feed to your BuddyPress profile page.', $this->i18n );
  		
  		parent::__construct( false, $name, $opts );
  		
@@ -38,7 +38,7 @@ class slushman_BP_profile_rss_widget extends WP_Widget {
 
 		} // End of for loop
 
-		$this->fields[] = array( 'name' => 'If you use multiple widgets: which one is this?', 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
+		$this->fields[] = array( 'name' => __( 'If you use multiple widgets: which one is this?', $this->i18n ), 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
 
  	} // End of __construct()
 

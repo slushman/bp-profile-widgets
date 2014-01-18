@@ -1,15 +1,15 @@
 <?php
 
-class slushman_bp_profile_text_box_widget extends WP_Widget {
+class slushman_bp_profile_bppw_text_widget extends WP_Widget {
 
 /**
  * Register widget with WordPress.
  */
 	function __construct() {
 	
-		$name 						= 'BP Profile Text Box';
 		$this->i18n					= 'bp-profile-widgets';
-		$widget_opts['description'] = __( 'Add a text box to your BuddyPress profile page.', 'slushman-bp-profile-text-box' );
+		$name 						= __( 'BP Profile Text Box', $this->i18n );
+		$widget_opts['description'] = __( 'Add a text box to your BuddyPress profile page.', $this->i18n );
 	
 		parent::WP_Widget( false, $name, $widget_opts );
 
@@ -20,7 +20,7 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
 		$this->fields[] = array( 'name' => __( 'Hide widget if empty', $this->i18n ), 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
 
 		$this->options 	= (array) get_option( 'slushman_bppw_settings' );
-		$quantity 		= $this->options['BP_profile_text_box_widget'];
+		$quantity 		= $this->options['BP_profile_BPPW_text_widget'];
 
 		// Create $selects for how many items select menu
 		for ( $i = 1; $i <= $quantity; $i++ ) {
@@ -29,7 +29,7 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
 
 		} // End of for loop
 
-		$this->fields[] = array( 'name' => 'If you use multiple widgets: which one is this?', 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
+		$this->fields[] = array( 'name' => __( 'If you use multiple widgets: which one is this?', $this->i18n ), 'underscored' => 'instance_number', 'type' => 'select', 'value' => 1, 'sels' => $instance_selects );
 	
 	} // End of __construct()
 
@@ -44,7 +44,7 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
 
 		global $slushman_bp_profile_widgets;
 
-		$textfield 	= __( 'Text Box', $this->i18n );
+		$textfield 	= __( 'BPPW Text Box', $this->i18n );
 		$text 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $textfield );
 
 		echo '<div class="bpcustomtextwidget">' . ( !empty( $instance['filter'] ) ? wpautop( $text ) : $text ) . '</div>';
@@ -105,7 +105,7 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
 
 		if ( bp_is_user_profile() ) {
 
-			$textfield 	= __( 'Text Box', $this->i18n );
+			$textfield 	= __( 'BPPW Text Box', $this->i18n );
 			$text 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $textfield );
 
 			if ( !empty( $text ) || $instance['hide_empty'] == 0 ) {
@@ -177,6 +177,6 @@ class slushman_bp_profile_text_box_widget extends WP_Widget {
 		
 	} // End of update()
 
-} // End of slushman_bp_profile_text_box_widget()
+} // End of slushman_bp_profile_bppw_text_widget()
 
 ?>

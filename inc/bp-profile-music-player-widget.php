@@ -7,9 +7,9 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
  */
  	function __construct() {
  	
- 		$name 					= 'BP Profile Music Player';
  		$this->i18n 			= 'bp-profile-widgets';
- 		$opts['description'] 	= __( 'Add a music player to your BuddyPress profile page.', 'slushman-bp-profile-music-player', $this->i18n );
+ 		$name 					= __( 'BP Profile Music Player', $this->i18n );
+ 		$opts['description'] 	= __( 'Add a music player to your BuddyPress profile page.', $this->i18n );
  		
  		parent::__construct( false, $name, $opts );
  		
