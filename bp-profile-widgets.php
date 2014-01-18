@@ -4,7 +4,7 @@
 Plugin Name: BP Profile Widgets
 Plugin URI: http://slushman.com/plugins/bp-profile-widgets
 Description: BP Profile Widgets allows BuddyPress users to embed a music player, a video player, a photo gallery, and/or a custom text widget on the sidebar of the user's profile page using custom profile fields from their profile form. This plugin requires that BuddyPress be installed and the theme have at least one sidebar.
-Version: 0.5.1
+Version: 0.5.2
 Text Domain: bp-profile-widgets
 Domain Path: /languages
 Author: Slushman
