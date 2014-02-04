@@ -4,7 +4,11 @@
 Plugin Name: BP Profile Widgets
 Plugin URI: http://slushman.com/plugins/bp-profile-widgets
 Description: BP Profile Widgets allows BuddyPress users to embed a music player, a video player, a photo gallery, and/or a custom text widget on the sidebar of the user's profile page using custom profile fields from their profile form. This plugin requires that BuddyPress be installed and the theme have at least one sidebar.
+<<<<<<< HEAD
 Version: 0.5.3
+=======
+Version: 0.5.2
+>>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 Text Domain: bp-profile-widgets
 Domain Path: /languages
 Author: Slushman
@@ -459,8 +463,11 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 			if ( $group_id == 0 ) { return; }
 
 			foreach ( $this->profiles as $widget_name => $widget_fields ) {
+<<<<<<< HEAD
 
 				$widget_name = ( $widget_name == 'custom_text' ? 'text_box' : $widget_name );
+=======
+>>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 				
 				$quantity = $this->options['BP_profile_' . $widget_name . '_widget'];
 
@@ -475,8 +482,11 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 
 					foreach ( $widget_fields as $field_name => $field_info ) {
 
+<<<<<<< HEAD
 						$widget_name = ( $widget_name == 'text_box' ? 'custom_text' : $widget_name );						
 
+=======
+>>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 						$capped_name = ( $widget_name == 'rss' ? strtoupper( $widget_name ) : str_replace( '_', ' ', $widget_name ) );
 
 						if ( $field_name === 0 ) { $field_name = ''; }
@@ -552,7 +562,11 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
  */
 		function bppw_remove_profile_fields( $widget_name ) {
 
+<<<<<<< HEAD
 			if ( $widget_name == 'text_box' ) {
+=======
+			if ( $widget_name == 'bppw_text' ) {
+>>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 
 				$removes = array( 'text' );
 
@@ -604,7 +618,11 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
  */
 		function bppw_get_profile_data( $instance, $field_name ) {
 
+<<<<<<< HEAD
 			$number = ( array_key_exists( 'instance_number', $instance ) ? $instance['instance_number'] : '' );
+=======
+			$number = $instance['instance_number'];
+>>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 
 			if ( $number == 1 ) {
 
@@ -703,6 +721,7 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 		function widgets_init() {
 
 			foreach ( $this->fields as $field ) {
+<<<<<<< HEAD
 
 				$widget = 'slushman_' . $field['underscored'];
 
@@ -713,6 +732,16 @@ if ( !class_exists( 'Slushman_BP_Profile_Widgets' ) ) { //Start Class
 				} elseif ( $this->options[$field['underscored']] == 0 ) {
 					
 					unregister_widget( $widget );
+=======
+				
+				if ( $this->options[$field['underscored']] > 0 ) { 
+				
+					register_widget( 'slushman_' . $field['underscored'] );
+			
+				} elseif ( $this->options[$field['underscored']] == 0 ) {
+					
+					unregister_widget( 'slushman_' . $field['underscored'] );
+>>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 					
 				} // End of options check
 				

@@ -53,13 +53,21 @@ class slushman_bp_profile_music_player_widget extends WP_Widget {
 		$url 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $urlfield );
 		$desc 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $rolefield );
 	 	$width 		= $instance['width'];
+<<<<<<< HEAD
 	 	$height 	= ( array_key_exists( 'height', $instance ) ? $instance['height'] : '' );
+=======
+	 	$height 	= $instance['height'];
+>>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 	 	$service 	= $this->find_service( $url );
 
 	 	//echo '<p>$url: ' . $url . '</p>';
 	 	//echo '<p>$service: ' . $service . '</p>';
+<<<<<<< HEAD
 	 	//echo $slushkit->print_array( $instance );
 
+=======
+	 	
+>>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 	 	if ( empty( $url ) || !$service ) {
 
 			echo '<p>' . ( !empty( $instance['emptymsg'] ) ? $instance['emptymsg'] : '' ) . '</p>';
