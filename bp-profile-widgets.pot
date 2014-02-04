@@ -1,0 +1,288 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: BP Profile WIdgets\n"
+"POT-Creation-Date: 2014-01-09 09:25-0600\n"
+"PO-Revision-Date: 2014-01-09 09:25-0600\n"
+"Last-Translator: Chris Wilcoxson <chris@slushman.com>\n"
+"Language-Team: Slushman <chris@slushman.com>\n"
+"Language: en_EN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.3\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __;_e;_x\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: bp-profile-widgets.php:349 bp-profile-widgets.php:381
+#: toolkit/make_settings.php:452 toolkit/make_settings.php:484
+msgid "Settings"
+msgstr ""
+
+#: bp-profile-widgets.php:369 bp-profile-widgets.php:380
+#: toolkit/make_settings.php:472 toolkit/make_settings.php:483
+msgid " Settings"
+msgstr ""
+
+#: bp-profile-widgets.php:432 bp-profile-widgets.php:436
+#: bp-profile-widgets.php:460
+msgid "Profile Widgets"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:12
+msgid "Add a music player to your BuddyPress profile page."
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:18
+#: inc/bp-profile-photo-gallery-widget.php:21
+#: inc/bp-profile-text-widget.php:21 inc/bp-profile-video-player-widget.php:21
+msgid "Title"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:18
+msgid "Music Player"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:19
+#: inc/bp-profile-photo-gallery-widget.php:22
+#: inc/bp-profile-video-player-widget.php:22
+msgid "Width"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:20
+#: inc/bp-profile-photo-gallery-widget.php:23
+msgid "Height"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:21
+#: inc/bp-profile-photo-gallery-widget.php:24
+#: inc/bp-profile-video-player-widget.php:23
+msgid "Empty Message"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:21
+msgid "This user has not activated their music player."
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:22
+#: inc/bp-profile-photo-gallery-widget.php:25 inc/bp-profile-rss-widget.php:32
+#: inc/bp-profile-text-widget.php:23 inc/bp-profile-video-player-widget.php:24
+msgid "Hide widget if empty"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:52
+msgid "Music Player URL"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:53
+msgid "Music Player Role"
+msgstr ""
+
+#: inc/bp-profile-music-player-widget.php:100
+msgid "The URL you entered is not a valid BandCamp URL."
+msgstr ""
+
+#: inc/bp-profile-photo-gallery-widget.php:12
+msgid "Add a photo gallery to your BuddyPress profile page."
+msgstr ""
+
+#: inc/bp-profile-photo-gallery-widget.php:21
+msgid "Photo Gallery"
+msgstr ""
+
+#: inc/bp-profile-photo-gallery-widget.php:24
+msgid "This user has not activated their photo gallery."
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:10
+msgid "BP Profile Display RSS"
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:12
+msgid "Add an RSS or Atom feed to your BuddyPress profile page."
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:28
+msgid "How many items?"
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:29
+msgid "Display item content?"
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:30
+msgid "Display item author if available?"
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:31
+msgid "Display item date?"
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:79
+#, php-format
+msgid "RSS Error: %s"
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:97
+msgid ""
+"An error has occurred, which probably means the feed is down. Try again "
+"later."
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:123
+msgid "Untitled"
+msgstr ""
+
+#: inc/bp-profile-rss-widget.php:307
+msgid "Unknown Feed"
+msgstr ""
+
+#: inc/bp-profile-text-widget.php:12
+msgid "Add a text box to your BuddyPress profile page."
+msgstr ""
+
+#: inc/bp-profile-text-widget.php:22
+msgid "Automatically add paragraphs"
+msgstr ""
+
+#: inc/bp-profile-video-player-widget.php:12
+msgid "Add a video player to your BuddyPress profile page."
+msgstr ""
+
+#: inc/bp-profile-video-player-widget.php:23
+msgid "This user has not activated their video player."
+msgstr ""
+
+#: inc/bp-profile-video-player-widget.php:25
+msgid "Aspect Ratio"
+msgstr ""
+
+#: inc/bp-profile-video-player-widget.php:25
+msgid "Normal"
+msgstr ""
+
+#: inc/bp-profile-video-player-widget.php:25
+msgid "HD"
+msgstr ""
+
+#: inc/config.php:4
+msgid "BP Profile Widgets"
+msgstr ""
+
+#: inc/config.php:13
+msgid "Widget Selection"
+msgstr ""
+
+#: inc/config.php:15
+msgid ""
+"Select which widgets you want to use on your site. The custom profile fields "
+"needed for these widgets will be created automatically based on your choices "
+"here. Unchecked widgets will not be available on the Widgets panel."
+msgstr ""
+
+#: inc/config.php:27
+msgid "Music Player Widget"
+msgstr ""
+
+#: inc/config.php:31
+msgid "How many Music Player widgets would you to create?"
+msgstr ""
+
+#: inc/config.php:37
+msgid "Video Player Widget"
+msgstr ""
+
+#: inc/config.php:41
+msgid ""
+"Check to use the BP Profile Video Player widget and create the required "
+"extended profile fields."
+msgstr ""
+
+#: inc/config.php:46
+msgid "Photo Gallery Widget"
+msgstr ""
+
+#: inc/config.php:50
+msgid ""
+"Check to use the BP Profile Photo Gallery widget and create the required "
+"extended profile fields."
+msgstr ""
+
+#: inc/config.php:55
+msgid "Text Box Widget"
+msgstr ""
+
+#: inc/config.php:59
+msgid ""
+"Check to use the BP Profile Text Box widget and create the required extended "
+"profile fields."
+msgstr ""
+
+#: inc/config.php:64
+msgid "RSS Widget"
+msgstr ""
+
+#: inc/config.php:68
+msgid ""
+"Check to use the BP Profile RSS widget and create the required extended "
+"profile fields."
+msgstr ""
+
+#: inc/config.php:80
+msgid ""
+"Please enter the URL for your album / set / profile from any of the "
+"following services: Bandcamp, SoundCloud, Reverbnation, Tunecore, Mixcloud, "
+"or Noisetrade."
+msgstr ""
+
+#: inc/config.php:81
+msgid ""
+"Please explain your role in the music (artist, writer, player, producer, "
+"etc)."
+msgstr ""
+
+#: inc/config.php:82
+msgid ""
+"Please enter the URL to the YouTube, Vimeo, Veoh, DailyMotion, Blip.tv, "
+"uStream, or Facebook video you want to display on your profile."
+msgstr ""
+
+#: inc/config.php:83
+msgid ""
+"Please explain your role in the video (actor, writer, crew, producer, etc)."
+msgstr ""
+
+#: inc/config.php:84
+msgid ""
+"Please enter the URL for the set / gallery / album / profile from any of the "
+"following services: Flickr, Picasa, Photobucket, Fotki, dotPhoto, or Imgur."
+msgstr ""
+
+#: inc/config.php:85
+msgid ""
+"Please explain your role in the gallery (model, photographer, editor, etc)."
+msgstr ""
+
+#: inc/config.php:86
+msgid ""
+"Please enter the text you want to appear on your profile. HTML is allowed."
+msgstr ""
+
+#: inc/config.php:87
+msgid ""
+"Please enter the URL for the RSS or Atom feed you want to appear on your "
+"profile."
+msgstr ""
+
+#: toolkit/slushman_toolkit.php:1237
+msgid "Select hour"
+msgstr ""
+
+#: toolkit/slushman_toolkit.php:1333
+msgid "Select minute"
+msgstr ""
+
+#: toolkit/slushman_toolkit.php:1536
+msgid "Select state"
+msgstr ""
