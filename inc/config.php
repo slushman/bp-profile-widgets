@@ -53,11 +53,7 @@ $i++;
 
 $this->fields[$i]['section'] 		= 'widget_selection';
 $this->fields[$i]['name'] 			= __( 'Text Box Widget', $this->constants['i18n'] );
-<<<<<<< HEAD
 $this->fields[$i]['underscored'] 	= 'BP_profile_text_box_widget';
-=======
-$this->fields[$i]['underscored'] 	= 'BP_profile_BPPW_text_widget';
->>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 $this->fields[$i]['type'] 			= 'select';
 $this->fields[$i]['value'] 			= 0;
 $this->fields[$i]['desc'] 			= __( 'Check to use the BP Profile Text Box widget and create the required extended profile fields.', $this->constants['i18n'] );
@@ -87,11 +83,7 @@ $this->profiles['video_player']['URL'] 		= array( 'type' => 'textbox', 'desc' =>
 $this->profiles['video_player']['role'] 	= array( 'type' => 'textbox', 'desc' => __( 'Please explain your role in the video (actor, writer, crew, producer, etc).', $this->constants['i18n'] ) );
 $this->profiles['photo_gallery']['URL'] 	= array( 'type' => 'textbox', 'desc' => __( 'Please enter the URL for the set / gallery / album / profile from any of the following services: Flickr, Picasa, Photobucket, Fotki, dotPhoto, or Imgur.', $this->constants['i18n'] ) );
 $this->profiles['photo_gallery']['role'] 	= array( 'type' => 'textbox', 'desc' => __( 'Please explain your role in the gallery (model, photographer, editor, etc).', $this->constants['i18n'] ) );
-<<<<<<< HEAD
 $this->profiles['custom_text']['box'] 		= array( 'type' => 'textarea', 'desc' => __( 'Please enter the text you want to appear on your profile. HTML is allowed.', $this->constants['i18n'] ) );
-=======
-$this->profiles['BPPW_text']['box'] 		= array( 'type' => 'textarea', 'desc' => __( 'Please enter the text you want to appear on your profile. HTML is allowed.', $this->constants['i18n'] ) );
->>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 $this->profiles['rss']['feed_URL'] 			= array( 'type' => 'textbox', 'desc' => __( 'Please enter the URL for the RSS or Atom feed you want to appear on your profile.', $this->constants['i18n'] ) );
 
 ?>

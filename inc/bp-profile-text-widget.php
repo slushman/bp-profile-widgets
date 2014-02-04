@@ -1,10 +1,6 @@
 <?php
 
-<<<<<<< HEAD
 class slushman_bp_profile_text_box_widget extends WP_Widget {
-=======
-class slushman_bp_profile_bppw_text_widget extends WP_Widget {
->>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 
 /**
  * Register widget with WordPress.
@@ -24,11 +20,7 @@ class slushman_bp_profile_bppw_text_widget extends WP_Widget {
 		$this->fields[] = array( 'name' => __( 'Hide widget if empty', $this->i18n ), 'underscored' => 'hide_empty', 'type' => 'checkbox', 'value' => 0 );
 
 		$this->options 	= (array) get_option( 'slushman_bppw_settings' );
-<<<<<<< HEAD
 		$quantity 		= $this->options['BP_profile_text_box_widget'];
-=======
-		$quantity 		= $this->options['BP_profile_BPPW_text_widget'];
->>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 
 		// Create $selects for how many items select menu
 		for ( $i = 1; $i <= $quantity; $i++ ) {
@@ -52,11 +44,7 @@ class slushman_bp_profile_bppw_text_widget extends WP_Widget {
 
 		global $slushman_bp_profile_widgets;
 
-<<<<<<< HEAD
 		$textfield 	= __( 'Custom Text Box', $this->i18n );
-=======
-		$textfield 	= __( 'BPPW Text Box', $this->i18n );
->>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 		$text 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $textfield );
 
 		echo '<div class="bpcustomtextwidget">' . ( !empty( $instance['filter'] ) ? wpautop( $text ) : $text ) . '</div>';
@@ -117,11 +105,7 @@ class slushman_bp_profile_bppw_text_widget extends WP_Widget {
 
 		if ( bp_is_user_profile() ) {
 
-<<<<<<< HEAD
 			$textfield 	= __( 'Custom Text Box', $this->i18n );
-=======
-			$textfield 	= __( 'BPPW Text Box', $this->i18n );
->>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 			$text 		= $slushman_bp_profile_widgets->bppw_get_profile_data( $instance, $textfield );
 
 			if ( !empty( $text ) || $instance['hide_empty'] == 0 ) {
@@ -193,10 +177,6 @@ class slushman_bp_profile_bppw_text_widget extends WP_Widget {
 		
 	} // End of update()
 
-<<<<<<< HEAD
 } // End of slushman_bp_profile_text_box_widget()
-=======
-} // End of slushman_bp_profile_bppw_text_widget()
->>>>>>> ee65f9cfb701e5cff597e28b57e04b7e764524af
 
 ?>
